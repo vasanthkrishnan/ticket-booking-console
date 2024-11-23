@@ -1,5 +1,4 @@
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.util.*;
 
 public class Movie {
     private String title;
@@ -21,7 +20,7 @@ public class Movie {
 
     public void insertMovie()
     {
-        String sql = "INSERT INTO movies(title, genre, rating, duration, synopsis) VALUES (?,?,?,?,?)";
+        String sql = "INSERT INTO movies(Title, Genre, Rating, Duration, Synopsis) VALUES (?,?,?,?,?)";
         Object[] values = { title, genre, rating, duration, synopsis };
         int rowAffected = db.executeUpdate(sql, values);
         if(rowAffected > 0)
@@ -37,21 +36,15 @@ public class Movie {
     public void showMovies()
     {
         String sql = "SELECT * FROM Movies";
-        ResultSet rs = db.getRecords(sql);
-        try {
-            while(rs.next())
-            {
-                System.out.println("Movie ID : "+ rs.getInt("MovieID"));
-                System.out.println("Movie Title : " + rs.getString("Title"));
-                System.out.println("Genre : " + rs.getString("Genre"));
-                System.out.println("Rating : " + rs.getDouble("Rating"));
-                System.out.println("Duration (in ms) : " + rs.getInt("Duration"));
-                System.out.println("Synopsis" + rs.getString("Synopsis"));
+        List<Map<String, Object>> movies = db.getRecords(sql);
+        for(Map<String, Object> movie : movies) {
+                System.out.println("Movie ID : "+ movie.get("MovieID"));
+                System.out.println("Movie Title : " + movie.get("Title"));
+                System.out.println("Genre : " + movie.get("Genre"));
+                System.out.println("Rating : " + movie.get("Rating"));
+                System.out.println("Duration (in ms) : " + movie.get("Duration"));
+                System.out.println("Synopsis" + movie.get("Synopsis"));
                 System.out.println("--------------------------------------------------------");
-            }
-        }
-        catch(SQLException e) {
-            e.printStackTrace();
         }
     }
 }
